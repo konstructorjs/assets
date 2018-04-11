@@ -10,18 +10,17 @@ module.exports = class koa {
   }
 
   setup(app) {
-    const assets = {};
-    if (this.cssDir) {
-      assets.css = fs.readdirSync(path.join(currentDirectory, this.cssDir));
-      assets.css = assets.css || [];
-    }
-
-    if (this.jsDir) {
-      assets.js = fs.readdirSync(path.join(currentDirectory, this.jsDir));
-      assets.js = assets.js || [];
-    }
-
     app.use(async (ctx, next) => {
+      const assets = {};
+      if (this.cssDir && fs.existsSync(path.join(currentDirectory, this.cssDir))) {
+        assets.css = fs.readdirSync(path.join(currentDirectory, this.cssDir));
+        assets.css = assets.css || [];
+      }
+
+      if (this.jsDir && fs.existsSync(path.join(currentDirectory, this.jsDir))) {
+        assets.js = fs.readdirSync(path.join(currentDirectory, this.jsDir));
+        assets.js = assets.js || [];
+      }
       ctx.state.assets = assets;
       await next();
     });
